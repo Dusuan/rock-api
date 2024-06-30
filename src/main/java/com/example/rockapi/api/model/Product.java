@@ -1,16 +1,20 @@
 package com.example.rockapi.api.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Entity(name = "Product")
+@Entity(name = "productos")
 @Table(name = "productos")
+@Getter
+@Setter
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -24,57 +28,7 @@ public class Product {
     @Column
     private String image;
 
-    @ManyToMany
-    @JoinTable(
-            name="product_union",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "producto_artista_tipo")
-    )
-    private List<producto_artista_tipo> union;
-
-
-
-
-
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_pat", referencedColumnName = "id")
+    private producto_artista_tipo producto_artista_tipo;
 }

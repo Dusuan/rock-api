@@ -22,9 +22,7 @@ public class ProductService {
         return productRepository.save(producto);
     }
 
-    public  Optional<Product> getProductById(long id){
-        return productRepository.findById(id);
-    }
+
 
     public Boolean deleteProduct (long id) {
         try {
@@ -35,9 +33,28 @@ public class ProductService {
         }
     }
 
-    public Optional<ArrayList<Product>> getProductOverCertainPrice(double price) {
-        return productRepository.findByPriceGreaterThan(price);
+    public Optional<ArrayList<Product>> getAllProductUnderCertainPrice(double price) {
+        return productRepository.findAllByPriceLessThan(price);
         }
 
+    public  Optional<Product> getProductById(long id){
+        return productRepository.findById(id);
+    }
+
+    public Optional<ArrayList<Product>> getAllProductByName(String name) {
+        return productRepository.findAllByNameContainingIgnoreCase(name);
+    }
+    public Optional<ArrayList<Product>> getAllProductByDescription(String description) {
+        return productRepository.findAllByDescriptionContainingIgnoreCase(description);
+    }
+    public Optional<ArrayList<Product>> getAllProductByPriceGreaterThan(double price) {
+        return productRepository.findAllByPriceGreaterThan(price);
+    }
+    public Optional<ArrayList<Product>> getArtistProducts(String artistName) {
+        return productRepository.findProductosByArtistName(artistName);
+    }
+    public Optional<ArrayList<Product>> getProductByProductType(String productType) {
+        return productRepository.findProductByProductType(productType);
+    }
 
 }

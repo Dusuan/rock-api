@@ -14,9 +14,41 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping
+    @GetMapping(path = "/")
     public ArrayList<Product> getProducts() {
         return this.productService.getAllProducts();
+    }
+
+    @GetMapping(path = "/{id}")
+    public Optional<Product> getUserById(@PathVariable("id") Long id){
+        return this.productService.getProductById(id);
+    }
+
+    @GetMapping(path = "/price/over/{price}")
+    public Optional<ArrayList<Product>> getProductsByPriceOver (@PathVariable("price") double price){
+        return this.productService.getAllProductByPriceGreaterThan(price);
+    }
+
+    @GetMapping(path = "/name/{name}")
+    public Optional<ArrayList<Product>> getProductsByName(@PathVariable("name") String name){
+        return this.productService.getAllProductByName(name);
+    }
+    @GetMapping(path = "/descripcion/{descripcion}")
+    public Optional<ArrayList<Product>> getProductsByDescription(@PathVariable("descripcion") String description){
+        return this.productService.getAllProductByDescription(description);
+    }
+    @GetMapping(path = "/price/under/{price}")
+    public Optional<ArrayList<Product>> getProductsByPriceUnder (@PathVariable("price") double price){
+        return this.productService.getAllProductUnderCertainPrice(price);
+    }
+
+    @GetMapping(path = "/artista/{nombre}")
+    public Optional<ArrayList<Product>> getProductsByArtista(@PathVariable("nombre") String nombre){
+        return this.productService.getArtistProducts(nombre);
+    }
+    @GetMapping(path = "/productType/{type}")
+    public Optional<ArrayList<Product>> getProductsByType (@PathVariable("type") String type){
+        return this.productService.getProductByProductType(type);
     }
 
     @PostMapping
@@ -24,10 +56,6 @@ public class ProductController {
         return this.productService.createProduct(product);
     }
 
-    @GetMapping(path = "/{id}")
-    public Optional<Product> getUserById(@PathVariable("id") Long id){
-        return this.productService.getProductById(id);
-    }
 
     @DeleteMapping(path = "/{id}")
     public String deleteById(@PathVariable("id") Long id) {
@@ -39,9 +67,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping(path = "/over/{price}")
-    public Optional<ArrayList<Product>> getProductsByPriceOver (@PathVariable("price") double price){
-        return this.productService.getProductOverCertainPrice(price);
-    }
+
 
 }
