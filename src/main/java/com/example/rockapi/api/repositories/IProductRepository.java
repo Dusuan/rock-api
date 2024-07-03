@@ -27,6 +27,10 @@ public interface IProductRepository
 
 
 
+
+
+
+
     @Query("SELECT p FROM productos p " +
             "JOIN p.producto_artista_tipo pat " +
             "JOIN pat.id_artista a " +

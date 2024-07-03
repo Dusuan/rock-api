@@ -14,6 +14,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private long id;
 
     @Column(unique = true, nullable = false)
@@ -28,7 +29,7 @@ public class Product {
     @Column
     private String image;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_pat", referencedColumnName = "id")
     private producto_artista_tipo producto_artista_tipo;
 }

@@ -13,8 +13,10 @@ public class artistas {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(name = "id")
+    private Long id;
     private String name;
 
 }

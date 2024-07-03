@@ -14,9 +14,9 @@ public class producto_artista_tipo {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "id_artista", referencedColumnName = "id")

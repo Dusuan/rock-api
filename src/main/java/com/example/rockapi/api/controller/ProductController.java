@@ -51,9 +51,9 @@ public class ProductController {
         return this.productService.getProductByProductType(type);
     }
 
-    @PostMapping
-    public Product addProduct(@RequestBody Product product) {
-        return this.productService.createProduct(product);
+    @PostMapping(path = "/newProduct")
+    public void addProduct(@RequestBody Product product) {
+         this.productService.createProduct(product);
     }
 
 
