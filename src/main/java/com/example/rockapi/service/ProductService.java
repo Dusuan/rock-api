@@ -1,20 +1,15 @@
 package com.example.rockapi.service;
 
-import com.example.rockapi.api.model.Product;
-import com.example.rockapi.api.model.artistas;
-import com.example.rockapi.api.model.producto_artista_tipo;
-import com.example.rockapi.api.model.tipo_producto;
-import com.example.rockapi.api.repositories.IProductRepository;
-import com.example.rockapi.api.repositories.IProducto_artista_tipo;
-import com.example.rockapi.api.repositories.ITipo_productoRepository;
+import com.example.rockapi.api.model.*;
+import com.example.rockapi.api.repositories.*;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.rockapi.api.repositories.IArtistasRepository;
 
-
+import java.util.Date;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,13 +23,16 @@ public class ProductService {
     ITipo_productoRepository tipoProductoRepository;
     @Autowired
     IProducto_artista_tipo producto_artista_tipoRepository;
+    @Autowired
+    IVentas ventasRepository;
 
 
-    public ArrayList<Product> getAllProducts() {
-        return (ArrayList<Product>) productRepository.findAll();
+
+    public Optional<List<Product>> getAllProducts() {
+        return Optional.of(productRepository.findAll());
     }
     @Transactional
-    public Product createProduct (@NotNull Product producto){ // i have absolutely no idea if im doing this correctly
+    public Product createProduct (@NotNull Product producto){ // I have absolutely no idea if im doing this correctly
 
         Optional<artistas> Artista = artistasRepository.findByName(
                 producto.getProducto_artista_tipo().getId_artista().getName());
@@ -65,19 +63,47 @@ public class ProductService {
 
       return producto;
     }
+    public Boolean deleteProductById (long id) {
 
-
-
-    public Boolean deleteProduct (long id) {
         try {
-            productRepository.deleteById(id);
+            Optional <Product> producto = productRepository.findById(id);
+            if(producto.isPresent()) {
+
+                ventas nuevaVenta = new ventas();
+                Date fecha = new Date();
+                String nombre = producto.get().getName();
+                double precio = producto.get().getPrice();
+                String tipo = producto.get().getProducto_artista_tipo().getId_tipo_producto().getName();
+
+                nuevaVenta.setDate(fecha);
+                nuevaVenta.setName(nombre);
+                nuevaVenta.setTipo_producto(tipo);
+                nuevaVenta.setPrice(precio);
+
+                ventasRepository.save(nuevaVenta);
+                productRepository.delete(producto.get());
+
+            }
+            else{
+                throw new Exception();
+            }
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public Optional<ArrayList<Product>> getAllProductUnderCertainPrice(double price) {
+    public Boolean deleteProductByName(String name){
+        try{
+            Optional<Product> producto = productRepository.findByName(name);
+            productRepository.delete(producto.get());
+            return true;
+        }catch(Exception e){
+            return false;
+        }
+    }
+
+    public Optional<List<Product>> getAllProductUnderCertainPrice(double price) {
         return productRepository.findAllByPriceLessThan(price);
         }
 
@@ -85,20 +111,23 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public Optional<ArrayList<Product>> getAllProductByName(String name) {
+    public Optional<List<Product>> getAllProductByName(String name) {
         return productRepository.findAllByNameContainingIgnoreCase(name);
     }
-    public Optional<ArrayList<Product>> getAllProductByDescription(String description) {
+    public Optional<List<Product>> getAllProductByDescription(String description) {
         return productRepository.findAllByDescriptionContainingIgnoreCase(description);
     }
-    public Optional<ArrayList<Product>> getAllProductByPriceGreaterThan(double price) {
+    public Optional<List<Product>> getAllProductByPriceGreaterThan(double price) {
         return productRepository.findAllByPriceGreaterThan(price);
     }
-    public Optional<ArrayList<Product>> getArtistProducts(String artistName) {
+    public Optional<List<Product>> getArtistProducts(String artistName) {
         return productRepository.findProductosByArtistName(artistName);
     }
-    public Optional<ArrayList<Product>> getProductByProductType(String productType) {
+    public Optional<List<Product>> getProductByProductType(String productType) {
         return productRepository.findProductByProductType(productType);
+    }
+    public Optional<List<Product>> getProductByNameAndType(String name, String tipo){
+        return productRepository.findAllByNameAndType(name, tipo);
     }
 
 }
